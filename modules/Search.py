@@ -97,3 +97,18 @@ class Search:
 
             except Exception as err:
                 print(err)
+
+    async def generate_following_question(self, previousAnswer: str, comment: str):
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
+            try:
+                response = await client.post(self.__baseurl + "api/search/generate-following-question",
+                                             headers=self.__headers,
+                                             json={
+                                                 "previousAnswer": previousAnswer,
+                                                 "comment": comment
+                                             })
+
+                return response.json() if response.status_code == 200 else response.text
+
+            except Exception as err:
+                print(err)

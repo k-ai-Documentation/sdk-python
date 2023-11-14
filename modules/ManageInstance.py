@@ -25,6 +25,15 @@ class ManageInstance:
             except Exception as err:
                 print(err)
 
+    async def version(self):
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
+            try:
+                response = await client.get(self.__baseurl + "version",
+                                            headers={"api-key": self.__credentials.apiKey})
+                return response.text
+            except Exception as err:
+                print(err)
+
     async def is_api_alive(self):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:

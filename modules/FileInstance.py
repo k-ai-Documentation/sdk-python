@@ -19,16 +19,17 @@ class FileInstance:
     def __init__(self, credentials: KaiStudioCredentials):
         self.__credentials = credentials
         self.__baseurl = "https://fma.kai-studio.ai/"
+        self.__headers = {
+            'organization-id': self.__credentials.organizationId,
+            'instance-id': self.__credentials.instanceId,
+            'api-key': self.__credentials.apiKey
+        }
 
     async def list_files(self):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'organization-id': self.__credentials.organizationId,
-                    'instance-id': self.__credentials.instanceId,
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "list-files", headers=headers)
+
+                response = await client.post(self.__baseurl + "list-files", headers=self.__headers)
                 return response.json() if response.status_code == 200 else response.text
 
             except Exception as err:
@@ -40,13 +41,7 @@ class FileInstance:
                 if len(files) == 0:
                     return []
 
-                headers = {
-                    'organization-id': self.__credentials.organizationId,
-                    'instance-id': self.__credentials.instanceId,
-                    'api-key': self.__credentials.apiKey
-                }
-
-                response = await client.post(self.__baseurl + "upload-file", files=files, headers=headers)
+                response = await client.post(self.__baseurl + "upload-file", files=files, headers=self.__headers)
 
                 return response.json() if response.status_code == 200 else response.text
 
@@ -56,13 +51,7 @@ class FileInstance:
     async def delete_files(self, fileName: str):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'organization-id': self.__credentials.organizationId,
-                    'instance-id': self.__credentials.instanceId,
-                    'api-key': self.__credentials.apiKey
-                }
-
-                response = await client.post(self.__baseurl + "delete-file", headers=headers, json={
+                response = await client.post(self.__baseurl + "delete-file", headers=self.__headers, json={
                     "file": fileName
                 })
 

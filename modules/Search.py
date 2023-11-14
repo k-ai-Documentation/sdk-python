@@ -25,15 +25,15 @@ class Search:
     def __init__(self, credentials):
         self.__credentials = credentials
         self.__baseurl = f"https://{self.__credentials.organizationId}.kai-studio.ai/{self.__credentials.instanceId}/"
+        self.__headers = {
+            'api-key': self.__credentials.apiKey
+        }
 
     # return SearchResult
     async def query(self, query, user):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/query", headers=headers, json={
+                response = await client.post(self.__baseurl + "api/search/query", headers=self.__headers, json={
                     "query": query,
                     "user": user
                 })
@@ -45,12 +45,10 @@ class Search:
     async def get_related_documents(self, query):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/related-documents", headers=headers, json={
-                    "query": query
-                })
+                response = await client.post(self.__baseurl + "api/search/related-documents", headers=self.__headers,
+                                             json={
+                                                 "query": query
+                                             })
 
                 return response.json() if response.status_code == 200 else response.text
 
@@ -60,10 +58,7 @@ class Search:
     async def get_doc_signature(self, docId):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/doc/" + docId, headers=headers)
+                response = await client.post(self.__baseurl + "api/search/doc/" + docId, headers=self.__headers)
 
                 return response.json() if response.status_code == 200 else response.text
 
@@ -73,10 +68,7 @@ class Search:
     async def get_doc_ids(self, docIds):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/docs", headers=headers, json={
+                response = await client.post(self.__baseurl + "api/search/docs", headers=self.__headers, json={
                     "docsIds": docIds
                 })
 
@@ -88,10 +80,7 @@ class Search:
     async def count_done_requests(self):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/stats/count-search", headers=headers)
+                response = await client.post(self.__baseurl + "api/search/stats/count-search", headers=self.__headers)
 
                 return response.json() if response.status_code == 200 else response.text
 
@@ -101,10 +90,8 @@ class Search:
     async def count_answered_done_requests(self):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                headers = {
-                    'api-key': self.__credentials.apiKey
-                }
-                response = await client.post(self.__baseurl + "api/search/stats/count-answered-search", headers=headers)
+                response = await client.post(self.__baseurl + "api/search/stats/count-answered-search",
+                                             headers=self.__headers)
 
                 return response.json() if response.status_code == 200 else response.text
 

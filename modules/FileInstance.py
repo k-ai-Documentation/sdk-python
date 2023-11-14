@@ -28,7 +28,6 @@ class FileInstance:
     async def list_files(self):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-
                 response = await client.post(self.__baseurl + "list-files", headers=self.__headers)
                 return response.json() if response.status_code == 200 else response.text
 

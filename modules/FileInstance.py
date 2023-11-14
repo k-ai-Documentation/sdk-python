@@ -3,9 +3,6 @@ import httpx
 from modules.KaiStudioCredentials import KaiStudioCredentials
 
 
-client = httpx.AsyncClient()
-
-
 class KaiStudioFileSignature:
     name: bool
     reason: str
@@ -24,7 +21,7 @@ class FileInstance:
         self.__baseurl = "https://fma.kai-studio.ai/"
 
     async def list_files(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -32,13 +29,13 @@ class FileInstance:
                     'api-key': self.__credentials.apiKey
                 }
                 response = await client.post(self.__baseurl + "list-files", headers=headers)
-                return response.json() if response.status_code == 200 else response.text
+                return response.text
 
             except Exception as err:
                 print(err)
 
     async def upload_files(self, files):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 if len(files) == 0:
                     return []
@@ -57,7 +54,7 @@ class FileInstance:
                 print(err)
 
     async def delete_files(self, fileName: str):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,

@@ -2,8 +2,6 @@ import httpx
 
 from modules.KaiStudioCredentials import KaiStudioCredentials
 
-client = httpx.AsyncClient()
-
 
 class ManageInstance:
     __credentials: KaiStudioCredentials
@@ -14,7 +12,7 @@ class ManageInstance:
         self.__imaUrl = "https://ima.kai-studio.ai/"
 
     async def get_global_health(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.get(self.__baseurl + "global/health",
                                             headers={"api-key": self.__credentials.apiKey})
@@ -23,7 +21,7 @@ class ManageInstance:
                 print(err)
 
     async def is_api_alive(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.get(self.__baseurl + "health", headers={"api-key": self.__credentials.apiKey})
                 return response.text
@@ -31,7 +29,7 @@ class ManageInstance:
                 print(err)
 
     async def generate_new_api_key(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -45,7 +43,7 @@ class ManageInstance:
                 print(err)
 
     async def update_name(self, name: str):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -60,7 +58,7 @@ class ManageInstance:
                 print(err)
 
     async def deploy(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -73,7 +71,7 @@ class ManageInstance:
                 print(err)
 
     async def delete(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -86,7 +84,7 @@ class ManageInstance:
                 print(err)
 
     async def add_kb(self, kb_type, options):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -102,7 +100,7 @@ class ManageInstance:
                 print(err)
 
     async def update_kb(self, kb_id, options):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,
@@ -118,7 +116,7 @@ class ManageInstance:
                 print(err)
 
     async def remove_kb(self, kb_id):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'organization-id': self.__credentials.organizationId,

@@ -1,5 +1,7 @@
 from typing import List
+
 import httpx
+
 from modules.KaiStudioCredentials import KaiStudioCredentials
 
 
@@ -17,9 +19,6 @@ class SearchResult:
     documents: List[DocumentResult]
 
 
-client = httpx.AsyncClient()
-
-
 class Search:
     __credentials: KaiStudioCredentials
 
@@ -29,24 +28,22 @@ class Search:
 
     # return SearchResult
     async def query(self, query, user):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey
                 }
-
                 response = await client.post(self.__baseurl + "api/search/query", headers=headers, json={
                     "query": query,
                     "user": user
                 })
-
-                return response.json() if response.status_code == 200 else response.text
+                return response.text
 
             except Exception as err:
                 print(err)
 
     async def get_related_documents(self, query):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey
@@ -61,12 +58,11 @@ class Search:
                 print(err)
 
     async def get_doc_signature(self, docId):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey
                 }
-                print(self.__baseurl)
                 response = await client.post(self.__baseurl + "api/search/doc/" + docId, headers=headers)
 
                 return response.json() if response.status_code == 200 else response.text
@@ -75,7 +71,7 @@ class Search:
                 print(err)
 
     async def get_doc_ids(self, docIds):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey
@@ -90,7 +86,7 @@ class Search:
                 print(err)
 
     async def count_done_requests(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey
@@ -103,7 +99,7 @@ class Search:
                 print(err)
 
     async def count_answered_done_requests(self):
-        async with client:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 headers = {
                     'api-key': self.__credentials.apiKey

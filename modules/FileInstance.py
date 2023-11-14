@@ -29,7 +29,7 @@ class FileInstance:
                     'api-key': self.__credentials.apiKey
                 }
                 response = await client.post(self.__baseurl + "list-files", headers=headers)
-                return response.text
+                return response.json() if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)

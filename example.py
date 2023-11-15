@@ -45,7 +45,7 @@ async def sync_mode():
     print(await search.query("what is the history of France TV?", "userid"))
 
     print("RELATED FILES")
-    print(await search.query("France TV", "userid"))
+    print(await search.get_related_documents("France TV"))
 
     print("GET DOC SIGNATURE:")
     print(await search.get_doc_signature("Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Contacter "

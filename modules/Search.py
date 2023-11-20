@@ -9,6 +9,13 @@ class DocumentResult:
     id: str
     name: str
     url: str
+    rate: float
+
+    def __init__(self, id: str, name: str, url: str, rate: float):
+        self.id = id
+        self.name = name
+        self.url = url
+        self.rate = rate
 
 
 class SearchResult:
@@ -17,6 +24,16 @@ class SearchResult:
     confidentRate: float
     gotAnswer: bool
     documents: List[DocumentResult]
+    followingQuestions: List[str]
+
+    def __init__(self, query: str, answer: str, confidentRate: float, gotAnswer: bool, documents: List[DocumentResult],
+                 followingQuestions: List[str]):
+        self.query = query
+        self.answer = answer
+        self.rate = confidentRate
+        self.gotAnswer = gotAnswer
+        self.documents = documents
+        self.followingQuestions = followingQuestions
 
 
 class Search:
@@ -30,14 +47,14 @@ class Search:
         }
 
     # return SearchResult
-    async def query(self, query, user):
+    async def query(self, query, user) -> SearchResult:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/query", headers=self.__headers, json={
                     "query": query,
                     "user": user
                 })
-                return response.text
+                return SearchResult(**response.json()["response"]) if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)
@@ -77,28 +94,28 @@ class Search:
             except Exception as err:
                 print(err)
 
-    async def count_done_requests(self):
+    async def count_done_requests(self) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/stats/count-search", headers=self.__headers)
 
-                return response.json() if response.status_code == 200 else response.text
+                return response.json()['response'] if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)
 
-    async def count_answered_done_requests(self):
+    async def count_answered_done_requests(self) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/stats/count-answered-search",
                                              headers=self.__headers)
 
-                return response.json() if response.status_code == 200 else response.text
+                return response.json()['response'] if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)
 
-    async def generate_following_question(self, previousAnswer: str, comment: str):
+    async def generate_following_question(self, previousAnswer: str, comment: str) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/generate-following-question",
@@ -108,7 +125,7 @@ class Search:
                                                  "comment": comment
                                              })
 
-                return response.json() if response.status_code == 200 else response.text
+                return response.json()['response'] if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)

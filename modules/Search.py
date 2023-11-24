@@ -23,14 +23,16 @@ class SearchResult:
     answer: str
     confidentRate: float
     gotAnswer: bool
+    reason: str
     documents: List[DocumentResult]
     followingQuestions: List[str]
 
-    def __init__(self, query: str, answer: str, confidentRate: float, gotAnswer: bool, documents: List[DocumentResult],
+    def __init__(self, query: str, answer: str, confidentRate: float, gotAnswer: bool, reason: str, documents: List[DocumentResult],
                  followingQuestions: List[str]):
         self.query = query
         self.answer = answer
         self.rate = confidentRate
+        self.reason = reason
         self.gotAnswer = gotAnswer
         self.documents = documents
         self.followingQuestions = followingQuestions

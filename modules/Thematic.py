@@ -3,7 +3,7 @@ import httpx
 from modules.KaiStudioCredentials import KaiStudioCredentials
 
 
-class AuditInstance:
+class Thematic:
     __credentials: KaiStudioCredentials
 
     def __init__(self, credentials: KaiStudioCredentials):

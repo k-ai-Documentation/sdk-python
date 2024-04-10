@@ -13,9 +13,9 @@ class Credentials(KaiStudioCredentials):
 
 
 async def sync_mode():
-    credentials = Credentials("163084b1-5e4c-49c5-b7ec-e41ccca65642",
-                              "b6b33cc0-8fe4-4829-bf27-2df41d3f74a9",
-                              "yBHhI6yW9vYG+4bi4VwanQVvyk6UYuDtWcZSn1oHT9Q=")
+    credentials = Credentials("your organization id",
+                              "your instance id",
+                              "your api key")
 
     file_instance = KaiStudio(credentials).file_instance()
     manage_instance = KaiStudio(credentials).manage_instance()
@@ -48,11 +48,11 @@ async def sync_mode():
     print(await search.get_related_documents("France TV"))
 
     print("GET DOC SIGNATURE:")
-    print(await search.get_doc_signature("Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Contacter "
+    print(await search.get_doc_signature("Azure Blob Storage: blob storage id::Contacter "
                                          "FranceTV.docx"))
     print("GET DOCS BY IDS:")
-    print(await search.get_doc_ids(["Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Contacter FranceTV.docx",
-                                    "Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Histoire FTV.docx"]))
+    print(await search.get_doc_ids(["Azure Blob Storage::blob storage id::Contacter FranceTV.docx",
+                                    "Azure Blob Storage::blob storage id::Histoire FTV.docx"]))
 
     print("COUNT DONE REQUESTS:")
     print(await search.count_done_requests())
@@ -98,9 +98,9 @@ async def sync_mode():
 
 
 async def async_mode():
-    credentials = Credentials("163084b1-5e4c-49c5-b7ec-e41ccca65642",
-                              "b6b33cc0-8fe4-4829-bf27-2df41d3f74a9",
-                              "yBHhI6yW9vYG+4bi4VwanQVvyk6UYuDtWcZSn1oHT9Q=")
+    credentials = Credentials("your organization id",
+                              "your instance id",
+                              "your api key")
 
     file_instance = KaiStudio(credentials).file_instance()
     manage_instance = KaiStudio(credentials).manage_instance()
@@ -113,10 +113,10 @@ async def async_mode():
              file_instance.delete_files("kai-studio v1.1.pdf"), manage_instance.get_global_health(),
              manage_instance.is_api_alive(), search.query("what is the history of France TV?", "userid"),
              search.query("France TV", "userid"),
-             search.get_doc_signature("Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Contacter "
+             search.get_doc_signature("Azure Blob Storage::blob storage id::Contacter "
                                       "FranceTV.docx"),
-             search.get_doc_ids(["Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Contacter FranceTV.docx",
-                                 "Azure Blob Storage::b6b33cc0-8fe4-4829-bf27-2df41d3f74a9::Histoire FTV.docx"]),
+             search.get_doc_ids(["Azure Blob Storage::blob storage id::Contacter FranceTV.docx",
+                                 "Azure Blob Storage::blob storage id::Histoire FTV.docx"]),
              search.count_done_requests(), search.count_answered_done_requests(),
              audit_instance.get_topic("france.tv application"),
              audit_instance.get_kbs(),

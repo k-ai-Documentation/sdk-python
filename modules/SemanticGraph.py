@@ -1,16 +1,16 @@
 import httpx
 
 
-class KMAudit:
+class SemanticGraph:
 
     def __init__(self, headers, base_url):
         self.__baseurl = base_url
         self.__headers = headers
 
-    async def get_conflict_information(self, limit, offset):
+    async def get_nodes(self, limit, offset):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                response = await client.post(self.__baseurl + "api/audit/conflict-information", headers=self.__headers,
+                response = await client.post(self.__baseurl + "api/semantic-graph/nodes", headers=self.__headers,
                                              json={
                                                  "limit": limit if not limit else 20,
                                                  "offset": offset if not offset else 0,
@@ -19,38 +19,36 @@ class KMAudit:
             except Exception as err:
                 print(err)
 
-    async def get_duplicated_information(self, limit, offset):
+    async def get_linked_nodes(self, id):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                response = await client.post(self.__baseurl + "api/audit/duplicated-information",
-                                             headers=self.__headers,
+                response = await client.post(self.__baseurl + "api/semantic-graph/linked-nodes", headers=self.__headers,
                                              json={
-                                                 "limit": limit if not limit else 20,
-                                                 "offset": offset if not offset else 0,
+                                                 "id": id
                                              })
                 return response.json() if response.status_code == 200 else response.text
             except Exception as err:
                 print(err)
 
-    async def set_conflict_managed(self, information_id):
+    async def get_node_by_label(self, label):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                response = await client.post(self.__baseurl + "api/audit/conflict-information/set-managed",
+                response = await client.post(self.__baseurl + "api/semantic-graph/nodes-by-label",
                                              headers=self.__headers,
                                              json={
-                                                 "id": information_id
+                                                 "label": label
                                              })
                 return response.json() if response.status_code == 200 else response.text
             except Exception as err:
                 print(err)
 
-    async def set_duplicated_information_managed(self, information_id):
+    async def detect_approximal_nodes(self, query):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                response = await client.post(self.__baseurl + "api/audit/duplicated-information/set-managed",
+                response = await client.post(self.__baseurl + "api/semantic-graph/identify-nodes",
                                              headers=self.__headers,
                                              json={
-                                                 "id": information_id
+                                                 "query": query
                                              })
                 return response.json() if response.status_code == 200 else response.text
             except Exception as err:

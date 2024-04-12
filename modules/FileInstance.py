@@ -2,8 +2,6 @@ from typing import List
 
 import httpx
 
-from modules.KaiStudioCredentials import KaiStudioCredentials
-
 
 class KaiStudioFileSignature:
     name: str
@@ -24,16 +22,10 @@ class KaiStudioFileUploadResponse:
 
 
 class FileInstance:
-    __credentials: KaiStudioCredentials
 
-    def __init__(self, credentials: KaiStudioCredentials):
-        self.__credentials = credentials
+    def __init__(self, headers):
+        self.__headers = headers
         self.__baseurl = "https://fma.kai-studio.ai/"
-        self.__headers = {
-            'organization-id': self.__credentials.organizationId,
-            'instance-id': self.__credentials.instanceId,
-            'api-key': self.__credentials.apiKey
-        }
 
     async def list_files(self) -> List[KaiStudioFileSignature]:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
@@ -54,6 +46,7 @@ class FileInstance:
                 if len(files) == 0:
                     return []
 
+                self.__headers = self.__headers | {"Content-Type": "multipart/form-data"}
                 response = await client.post(self.__baseurl + "upload-file", files=files, headers=self.__headers)
                 file_list = []
                 if response.status_code == 200:

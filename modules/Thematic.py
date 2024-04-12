@@ -1,17 +1,11 @@
 import httpx
 
-from modules.KaiStudioCredentials import KaiStudioCredentials
-
 
 class Thematic:
-    __credentials: KaiStudioCredentials
 
-    def __init__(self, credentials: KaiStudioCredentials):
-        self.__credentials = credentials
-        self.__baseurl = f"https://{self.__credentials.organizationId}.kai-studio.ai/{self.__credentials.instanceId}/"
-        self.__headers = {
-            'api-key': self.__credentials.apiKey
-        }
+    def __init__(self, headers, base_url):
+        self.__baseurl = base_url
+        self.__headers = headers
 
     async def get_topic(self, topic):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:

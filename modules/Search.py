@@ -2,8 +2,6 @@ from typing import List
 
 import httpx
 
-from modules.KaiStudioCredentials import KaiStudioCredentials
-
 
 class DocumentResult:
     id: str
@@ -27,7 +25,8 @@ class SearchResult:
     documents: List[DocumentResult]
     followingQuestions: List[str]
 
-    def __init__(self, query: str, answer: str, confidentRate: float, gotAnswer: bool, reason: str, documents: List[DocumentResult],
+    def __init__(self, query: str, answer: str, confidentRate: float, gotAnswer: bool, reason: str,
+                 documents: List[DocumentResult],
                  followingQuestions: List[str]):
         self.query = query
         self.answer = answer
@@ -39,14 +38,10 @@ class SearchResult:
 
 
 class Search:
-    __credentials: KaiStudioCredentials
 
-    def __init__(self, credentials):
-        self.__credentials = credentials
-        self.__baseurl = f"https://{self.__credentials.organizationId}.kai-studio.ai/{self.__credentials.instanceId}/"
-        self.__headers = {
-            'api-key': self.__credentials.apiKey
-        }
+    def __init__(self, headers, base_url):
+        self.__baseurl = base_url
+        self.__headers = headers
 
     # return SearchResult
     async def query(self, query, user) -> SearchResult:

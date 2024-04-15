@@ -50,7 +50,7 @@ km_audit = KaiStudio(credentials).km_audit()
 print(await km_audit.getConflictInformation(1O,0))
 ```
 ### ManageInstance
-[ManageInstance.ts](modules/ManageInstance.ts) provides methods for managing instance.
+[ManageInstance.py](modules/ManageInstance.py) provides methods for managing instance.
 - getGlobalHealth
 - isApiAlive
 - generateNewApiKey
@@ -70,7 +70,7 @@ print(await manage_instance.get_global_health())
 ```
 
 ### Thematic
-[Thematic.ts](modules/Thematic.ts) provides methods for managing thematic content.
+[Thematic.py](modules/Thematic.py) provides methods for managing thematic content.
 - getTopic
 - getKbs
 - getDocuments
@@ -95,7 +95,7 @@ print(await thematic.get_documents())
 ```
 
 ### SemanticGraph
-[SemanticGraph.ts](modules/SemanticGraph.ts) provides methods for managing semantic graph.
+[SemanticGraph.py](modules/SemanticGraph.py) provides methods for managing semantic graph.
 - getNodes
 - getLinkedNodes
 - getNodeByLabel
@@ -108,7 +108,7 @@ print(semantic_graph.getNodes(10,0))
 ```
 
 ### Search
-[Search.ts](modules/Search.ts) provides methods for searching.
+[Search.py](modules/Search.py) provides methods for searching.
 - search
 - getRelatedDocuments
 - countAnalyzedDocuments

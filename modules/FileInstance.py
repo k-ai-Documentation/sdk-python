@@ -7,9 +7,11 @@ class KaiStudioFileSignature:
     name: str
     metadata: str
 
-    def __init__(self, name: str, metadata: str):
+    def __init__(self, name: str, metadata: str, lastModified: str, size: int):
         self.name = name
         self.metadata = metadata
+        self.lastModified = lastModified
+        self.size = size
 
 
 class KaiStudioFileUploadResponse:
@@ -46,13 +48,8 @@ class FileInstance:
                 if len(files) == 0:
                     return []
 
-                self.__headers = self.__headers | {"Content-Type": "multipart/form-data"}
                 response = await client.post(self.__baseurl + "upload-file", files=files, headers=self.__headers)
-                file_list = []
-                if response.status_code == 200:
-                    for file in response.json()["response"]:
-                        file_list.append(KaiStudioFileUploadResponse(**file))
-                return file_list if response.status_code == 200 else response.text
+                return response.json()["response"] if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)

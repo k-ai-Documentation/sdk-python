@@ -17,7 +17,6 @@ class KaiStudio:
 
     def __init__(self, credentials: KaiStudioCredentials):
         self.__credentials = credentials
-        headers = [], baseUrl = ''
 
         if self.__credentials.organizationId and self.__credentials.instanceId and self.__credentials.apiKey:
             headers = {

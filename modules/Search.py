@@ -44,12 +44,15 @@ class Search:
         self.__headers = headers
 
     # return SearchResult
-    async def query(self, query, user) -> SearchResult:
+    async def query(self, query, user, impersonate, multiDocuments, needFollowingQuestions) -> SearchResult:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/query", headers=self.__headers, json={
                     "query": query,
-                    "user": user
+                    "user": user,
+                    "impersonate": impersonate,
+                    "multiDocuments": multiDocuments,
+                    "needFollowingQuestions": needFollowingQuestions,
                 })
                 return SearchResult(**response.json()["response"]) if response.status_code == 200 else response.text
 

@@ -7,14 +7,38 @@ SDK python enables developers to efficiently manage files, instance, perform sea
 To integrate the SDK into your project, include the SDK files in your project directory. 
 
 ## Quick start
-Here's a simple example to get you started with the SDK. This example demonstrates how to instantiate a new search and perform basic operations:
+There are two type of versions: SaaS version and Premise version.
+
+#### SaaS version
+
+SaaS version means you are using the service provided by Kai with cloud service. In this case, you will need 3 keys (organizationId, instanceId, apiKey) to initialize kaiStudio.
+
+Here's a simple example to get you started with the SDK:
+
 ```
 from index import KaiStudio
 from index import KaiStudioCredentials
 
-credentials = KaiStudioCredentials(organizationId="your organization id",
+credentials = KaiStudioCredentials({organizationId="your organization id",
                                    instanceId="your instance id",
-                                   apiKey="your api key")
+                                   apiKey="your api key"})
+search = KaiStudio(credentials).search()
+print("SEARCH QUERY:")
+print(await search.query("what is the history of France TV?", "userid"))
+
+```
+#### Premise version
+
+Premise version means you are using the service in your local server in your enterprise. In this case, you will need host and api key (optional) to initialize kaiStudio.
+
+Here's a simple example to get you started with the SDK:
+
+```
+from index import KaiStudio
+from index import KaiStudioCredentials
+
+//apiKey is optionnal
+credentials = KaiStudioCredentials({host="your server host", apiKey="your api key"})
 search = KaiStudio(credentials).search()
 print("SEARCH QUERY:")
 print(await search.query("what is the history of France TV?", "userid"))

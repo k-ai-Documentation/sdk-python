@@ -5,6 +5,7 @@ from modules.ManageInstance import ManageInstance
 from modules.Search import Search
 from modules.SemanticGraph import SemanticGraph
 from modules.Thematic import Thematic
+from modules.Core import Core
 
 
 class KaiStudio:
@@ -14,6 +15,7 @@ class KaiStudio:
     __manageInstance: ManageInstance
     __km_audit: KMAudit
     __semantic_graph: SemanticGraph
+    __core: Core
 
     def __init__(self, credentials: KaiStudioCredentials):
         self.__credentials = credentials
@@ -39,6 +41,7 @@ class KaiStudio:
             self.__thematic = Thematic(headers, base_url)
             self.__km_audit = KMAudit(headers, base_url)
             self.__semantic_graph = SemanticGraph(headers, base_url)
+            self.__core = Core(headers, base_url)
             self.__fileInstance = FileInstance(headers)
 
     def get_credentials(self) -> KaiStudioCredentials:
@@ -61,3 +64,6 @@ class KaiStudio:
 
     def semantic_graph(self) -> SemanticGraph:
         return self.__semantic_graph
+
+    def core(self) -> Core:
+        return self.__core

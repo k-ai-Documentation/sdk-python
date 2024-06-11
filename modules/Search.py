@@ -59,19 +59,6 @@ class Search:
             except Exception as err:
                 print(err)
 
-    async def get_related_documents(self, query):
-        async with httpx.AsyncClient(verify=False, timeout=None) as client:
-            try:
-                response = await client.post(self.__baseurl + "api/search/related-documents", headers=self.__headers,
-                                             json={
-                                                 "query": query
-                                             })
-
-                return response.json() if response.status_code == 200 else response.text
-
-            except Exception as err:
-                print(err)
-
     async def get_doc_signature(self, docId):
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
@@ -115,15 +102,12 @@ class Search:
             except Exception as err:
                 print(err)
 
-    async def generate_following_question(self, previousAnswer: str, comment: str) -> int:
+    async def identify_specific_document(self, conversation) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
-                response = await client.post(self.__baseurl + "api/search/generate-following-question",
+                response = await client.post(self.__baseurl + "api/search/identify-specific-document",
                                              headers=self.__headers,
-                                             json={
-                                                 "previousAnswer": previousAnswer,
-                                                 "comment": comment
-                                             })
+                                             json={"conversation": conversation})
 
                 return response.json()['response'] if response.status_code == 200 else response.text
 

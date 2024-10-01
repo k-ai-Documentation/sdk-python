@@ -111,13 +111,13 @@ async def sync_mode():
     print(await semantic_graph.get_nodes(10, 0))
 
     print("GET LINKED NODES:")
-    # print(await semantic_graph.get_linked_nodes("node_id"))
+    print(await semantic_graph.get_linked_nodes("node_id"))
 
     print("GET NODE BY LABEL:")
-    # print(await semantic_graph.get_node_by_label("node_label"))
+    print(await semantic_graph.get_node_by_label("node_label"))
 
     print("DETECT APPROXIMAL NODES:")
-    # print(await semantic_graph.detect_approximal_nodes("query"))
+    print(await semantic_graph.detect_approximal_nodes("query"))
 
 
 

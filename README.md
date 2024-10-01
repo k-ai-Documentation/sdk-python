@@ -46,45 +46,46 @@ print(await search.query("what is the history of France TV?", "userid"))
 ```
 
 ## Usage Guide
-### File Management
-[FileInstance.py](modules/FileInstance.py) provides methods for file management.
-- listFiles
-- downloadFile
-- uploadFiles
-- removeFile
+### Core
+[Core.py](modules/Core.py) provides methods for core functionalities.
+- count_documents
+- count_indexable_documents
+- count_indexed_documents
+- count_detected_documents
+- download_file
+- differential_indexation
+- get_scenarios
+- get_logs
+- reinit_all
 
 For example:
 ```py
-file_instance = KaiStudio(credentials).file_instance()
-print("UPLOAD FILE:")
-files = {"files": open("files/kai-studio v1.1.pdf", "rb")}
-print(await file_instance.upload_files(files))
+core = KaiStudio(credentials).core()
+print("COUNT DOCUMENTS")
+print(await core.count_documents())
 ```
 
 ### Auditing
 [KMAudit.py](modules/KMAudit.py) provides methods for auditing.
-- getConflictInformation
-- getDuplicatedInformation
-- setConflictManaged
-- setDuplicatedInformationManaged
+- get_all_tasks_linked_to_a_document
+- get_conflict_information
+- get_duplicated_information
+- set_conflict_managed
+- set_duplicated_information_managed
+- get_documents_to_manage
+- get_missing_subjects
 
 For example:
 ```py
 km_audit = KaiStudio(credentials).km_audit()
-print(await km_audit.getConflictInformation(1O,0))
+print(await km_audit.get_conflict_information(20, 0))
 ```
+
 ### ManageInstance
 [ManageInstance.py](modules/ManageInstance.py) provides methods for managing instance.
-- getGlobalHealth
-- isApiAlive
-- generateNewApiKey
-- updateName
-- deploy
-- delete
-- addKb
-- setPlayground
-- updateKb
-- removeKb
+- get_global_health
+- is_api_alive
+- version
 
 For example:
 ```py
@@ -93,37 +94,12 @@ print("GET GLOBAL HEALTH:")
 print(await manage_instance.get_global_health())
 ```
 
-### Thematic
-[Thematic.py](modules/Thematic.py) provides methods for managing thematic content.
-- getTopic
-- getKbs
-- getDocuments
-- addAuditQuestion
-- updateAuditQuestion
-- listAuditQuestions
-- getTestRunningState
-- runTest
-- listTopics
-- getSubtopic
-- countTopics
-- countSubtopics
-- countDocuments
-- countAuditQuestions
-- countValidatedAuditQuestions
-
-For example:
-```py
-thematic = KaiStudio(credentials).thematic()
-print("GET DOCUMENTS")
-print(await thematic.get_documents())
-```
-
 ### SemanticGraph
 [SemanticGraph.py](modules/SemanticGraph.py) provides methods for managing semantic graph.
-- getNodes
-- getLinkedNodes
-- getNodeByLabel
-- detectApproximalNodes
+- get_nodes
+- get_linked_nodes
+- get_node_by_label
+- detect_approximal_nodes
 
 For example:
 ```py
@@ -133,19 +109,19 @@ print(semantic_graph.getNodes(10,0))
 
 ### Search
 [Search.py](modules/Search.py) provides methods for searching.
-- search
-- getRelatedDocuments
-- countAnalyzedDocuments
-- getDocSignature
-- getDocsIds
-- countDoneRequests
-- countAnsweredDoneRequests
-- generateFollowingQuestion
-- listQuestionsAsked
+- query
+- get_doc_signature
+- get_doc_ids
+- get_list_search
+- count_done_requests
+- count_answered_done_requests
+- get_requests_to_api
+- identify_specific_document
+
 ```py
 search = KaiStudio(credentials).search()
 print("RELATED FILES")
-print(await search.get_related_documents("France TV"))
+print(await search.get_list_search(0, 10))
 ```
 
 

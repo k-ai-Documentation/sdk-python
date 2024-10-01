@@ -1,5 +1,4 @@
 import asyncio
-import time
 
 from index import KaiStudio
 from index import KaiStudioCredentials
@@ -8,46 +7,91 @@ credentials = KaiStudioCredentials(organizationId="your organization id",
                                    instanceId="your instance id",
                                    apiKey="your api key")
 
-file_instance = KaiStudio(credentials).file_instance()
 manage_instance = KaiStudio(credentials).manage_instance()
 search = KaiStudio(credentials).search()
-thematic = KaiStudio(credentials).thematic()
 km_audit = KaiStudio(credentials).km_audit()
 semantic_graph = KaiStudio(credentials).semantic_graph()
+core = KaiStudio(credentials).core()
 
 
 async def sync_mode():
-    # FILE INSTANCE
-    print("UPLOAD FILE:")
-    files = {"files": open("files/kai-studio v1.1.pdf", "rb")}
-    print(await file_instance.upload_files(files))
+    # CORE
+    print("COUNT DOCUMENTS")
+    print(await core.count_documents())
 
-    print("LIST FILES:")
-    print(await file_instance.list_files())
+    print("COUNT INDEXABLE DOCUMENTS")
+    print(await core.count_indexable_documents())
 
-    print("DELETE FILE:")
-    print(await file_instance.delete_files("kai-studio v1.1.pdf"))
+    print("COUNT INDEXED DOCUMENTS")    
+    print(await core.count_indexed_documents())
+
+    print("COUNT DETECTED DOCUMENTS")
+    print(await core.count_detected_documents())
+
+    # print("DOWNLOAD FILE")
+    print(await core.download_file("file_id"))
+
+    print("DIFFERENTIAL INDEXATION")
+    print(await core.differential_indexation())
+
+    print("GET SCENARIOS")
+    print(await core.get_scenarios())
+
+    # print("GET LOGS")
+    print(await core.get_logs("type", 0, 10))
+
+    # print("REINIT_ALL")
+    print(await core.reinit_all())
+
+    # AUDIT
+    # print("GET ALL TASK LINKED TO A DOCUMENT")
+    print(await km_audit.get_all_tasks_linked_to_a_document("document_id"))
+
+    print("GET CONFLICT INFORMATION")
+    print(await km_audit.get_conflict_information(20, 0))
+
+    print("GET DUPLICATED INFORMATION")
+    print(await km_audit.get_duplicated_information(20, 0))
+
+    print("SET CONFLIT MANAGED")
+    print(await km_audit.set_conflict_managed("information_id"))
+
+    print("SET DUPLICATED MANAGED")
+    print(await km_audit.set_duplicated_information_managed("information_id"))
+
+    print("GET DOCUMENTS TO MANAGE")
+    print(await km_audit.get_documents_to_manage(20, 0))
+
+    print("GET MISSING SUBJECTS")
+    print(await km_audit.get_missing_subjects(20, 0))
 
     # MANAGE INSTANCE
     print("GET GLOBAL HEALTH:")
     print(await manage_instance.get_global_health())
+
+    print("GET VERSION:")
+    print(await manage_instance.version())
 
     print("API IS ALIVE:")
     print(await manage_instance.is_api_alive())
 
     # SEARCH
     print("SEARCH QUERY:")
-    print(await search.query("what is the history of France TV?", "userid"))
-
-    print("RELATED FILES")
-    print(await search.get_related_documents("France TV"))
+    # query: 'query to search on the semantic index',
+    # user: '(optional) user identifier to log for this query',
+    # impersonate: 'name a profile to imitate the style of answer. eg: Knowledge manager or Sales man',
+    # multiDocuments: 'true if you want to search across multiple documents, false if you want to retrieve an answer following only one document',
+    # needFollowingQuestions: 'true if you want to the API purpose multiple next questions, else false'
+    print(await search.query("what is the history of France TV?", "userid", "", False, False))
 
     print("GET DOC SIGNATURE:")
-    print(await search.get_doc_signature("Azure Blob Storage: blob storage id::Contacter "
-                                         "FranceTV.docx"))
+    print(await search.get_doc_signature("document_id"))
+    
     print("GET DOCS BY IDS:")
-    print(await search.get_doc_ids(["Azure Blob Storage::blob storage id::Contacter FranceTV.docx",
-                                    "Azure Blob Storage::blob storage id::Histoire FTV.docx"]))
+    print(await search.get_doc_ids(["document_id1","document_id2"]))
+
+    print("GET LIST SEARCH:")
+    print(await search.get_list_search(0, 10))
 
     print("COUNT DONE REQUESTS:")
     print(await search.count_done_requests())
@@ -55,76 +99,40 @@ async def sync_mode():
     print("COUNT ANSWERED DONE REQUESTS:")
     print(await search.count_answered_done_requests())
 
-    print("GET TOPIC")
-    print(await thematic.get_topic("france.tv application"))
+    print("GET BACK REQUESTS MADE TO THE API")
+    print(await search.get_requests_to_api(10, 0))
 
-    print("GET KBS STATUS")
-    print(await thematic.get_kbs())
+    print("IDENTIFY SPECIFIC DOCUMENT:")
+    # input: an array on a conversation of the user and the assistant, each row of the array follow the structure { from: 'user' | 'assistant', message: string }
+    print(await search.identify_specific_document([{"user":"user message", "assistant": "assistant message"}]))
 
-    print("GET DOCUMENTS")
-    print(await thematic.get_documents())
+    # SEMANTIC GRAPH
+    print("GET NODES:")
+    print(await semantic_graph.get_nodes(10, 0))
 
-    print("LIST AUDIT QUESTIONS")
-    print(await thematic.list_audit_questions())
+    print("GET LINKED NODES:")
+    # print(await semantic_graph.get_linked_nodes("node_id"))
 
-    print("GET TEST RUNNING STATE")
-    print(await thematic.get_test_running_state())
+    print("GET NODE BY LABEL:")
+    # print(await semantic_graph.get_node_by_label("node_label"))
 
-    print("LIST TOPICS")
-    print(await thematic.list_topics())
+    print("DETECT APPROXIMAL NODES:")
+    # print(await semantic_graph.detect_approximal_nodes("query"))
 
-    print("GET SUBTOPIC")
-    print(await thematic.get_subtopic("visio-chat"))
-
-    print("COUNT TOPICS")
-    print(await thematic.count_topics())
-
-    print("COUNT SUBTOPICS")
-    print(await thematic.count_subtopics())
-
-    print("COUNT DOCUMENTS")
-    print(await thematic.count_documents())
-
-    print("COUNT AUDIT QUESTIONS")
-    print(await thematic.count_audit_questions())
-
-    print("COUNT VALIDATED AUDIT QUESTIONS")
-    print(await thematic.count_validated_audit_questions())
 
 
 async def async_mode():
-    files = {"files": open("files/kai-studio v1.1.pdf", "rb")}
-
-    tasks = [file_instance.upload_files(files), file_instance.list_files(),
-             file_instance.delete_files("kai-studio v1.1.pdf"), manage_instance.get_global_health(),
-             manage_instance.is_api_alive(), search.query("what is the history of France TV?", "userid"),
-             search.query("France TV", "userid"),
-             search.get_doc_signature("Azure Blob Storage::blob storage id::Contacter "
-                                      "FranceTV.docx"),
-             search.get_doc_ids(["Azure Blob Storage::blob storage id::Contacter FranceTV.docx",
-                                 "Azure Blob Storage::blob storage id::Histoire FTV.docx"]),
-             search.count_done_requests(), search.count_answered_done_requests(),
-             thematic.get_topic("france.tv application"),
-             thematic.get_kbs(),
-             thematic.get_documents(),
-             thematic.list_audit_questions(),
-             thematic.get_test_running_state(),
-             thematic.list_topics(),
-             thematic.get_subtopic("visio-chat"),
-             thematic.count_topics(),
-             thematic.count_subtopics(),
-             thematic.count_documents(),
-             thematic.count_audit_questions(),
-             thematic.count_validated_audit_questions()]
+    tasks = [
+        core.count_documents(),
+        core.count_indexable_documents(),
+        core.count_indexed_documents(),
+        core.count_detected_documents()
+    ]
     result_list = await asyncio.gather(*tasks, return_exceptions=False)
     print(result_list)
 
 
 if __name__ == "__main__":
-    start_time = time.time()
     asyncio.run(async_mode())
-    print("--- %s seconds ---" % (time.time() - start_time))
 
-    start_time = time.time()
     asyncio.run(sync_mode())
-    print("--- %s seconds ---" % (time.time() - start_time))

@@ -1,13 +1,8 @@
-from typing import List
+from typing import List, Literal, TypedDict, Dict
 
 import httpx
 
-
 class DocumentResult:
-    id: str
-    name: str
-    url: str
-    rate: float
 
     def __init__(self, id: str, name: str, url: str, rate: float):
         self.id = id
@@ -15,6 +10,16 @@ class DocumentResult:
         self.url = url
         self.rate = rate
 
+class SearchLog:
+    def __init__(self, id: int, query: str, answer_text: str, user_id: str):
+        self.id = id
+        self.query = query
+        self.answer_text = answer_text
+        self.user_id = user_id
+
+class ConversationMessage(TypedDict):
+    from_: Literal['user', 'assistant'] 
+    message: str
 
 class SearchResult:
     query: str
@@ -52,7 +57,7 @@ class Search:
                     "user": user,
                     "impersonate": impersonate,
                     "multiDocuments": multiDocuments,
-                    "needFollowingQuestions": needFollowingQuestions,
+                    "needFollowingQuestions": needFollowingQuestions
                 })
                 return SearchResult(**response.json()["response"]) if response.status_code == 200 else response.text
 
@@ -81,6 +86,19 @@ class Search:
             except Exception as err:
                 print(err)
 
+    async def get_list_search(self, offset: int, limit: int) -> List[SearchLog]:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
+            try:
+                response = await client.post(self.__baseurl + "api/search/list-search", headers=self.__headers, json={
+                    "offset": offset,
+                    "limit": limit
+                })
+
+                return [SearchLog(**item) for item in response.json()["response"]] if response.status_code == 200 else response.text
+
+            except Exception as err:
+                print(err)
+
     async def count_done_requests(self) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
@@ -102,7 +120,19 @@ class Search:
             except Exception as err:
                 print(err)
 
-    async def identify_specific_document(self, conversation) -> int:
+    async def get_requests_to_api(self, limit, offset) -> List[SearchLog]:
+        async with httpx.AsyncClient(verify=False, timeout=None) as client:
+            try:
+                response = await client.post(self.__baseurl + "api/search/stats/list-search", headers=self.__headers,
+                                             json={
+                                                 "limit": limit,
+                                                 "offset": offset
+                                             })
+                return [SearchLog(**item) for item in response.json()["response"]] if response.status_code == 200 else response.text
+            except Exception as err:
+                print(err)
+
+    async def identify_specific_document(self, conversation: List[ConversationMessage]) -> Dict:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:
                 response = await client.post(self.__baseurl + "api/search/identify-specific-document",

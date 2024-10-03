@@ -19,8 +19,6 @@ class KaiStudio:
 
         if self.__credentials.organizationId and self.__credentials.instanceId and self.__credentials.apiKey:
             headers = {
-                'organization-id': self.__credentials.organizationId,
-                'instance-id': self.__credentials.instanceId,
                 'api-key': self.__credentials.apiKey
             }
 

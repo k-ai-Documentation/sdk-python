@@ -104,7 +104,7 @@ async def sync_mode():
 
     print("IDENTIFY SPECIFIC DOCUMENT:")
     # input: an array on a conversation of the user and the assistant, each row of the array follow the structure { from: 'user' | 'assistant', message: string }
-    print(await search.identify_specific_document([{"user":"user message", "assistant": "assistant message"}]))
+    print(await search.identify_specific_document([{'from':"user", 'message': "user message"}, {'from':"assistant", 'message': "assistant message"}]))
 
     # SEMANTIC GRAPH
     print("GET NODES:")

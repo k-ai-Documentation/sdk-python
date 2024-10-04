@@ -86,19 +86,6 @@ class Search:
             except Exception as err:
                 print(err)
 
-    async def get_list_search(self, offset: int, limit: int) -> List[SearchLog]:
-        async with httpx.AsyncClient(verify=False, timeout=None) as client:
-            try:
-                response = await client.post(self.__baseurl + "api/search/list-search", headers=self.__headers, json={
-                    "offset": offset,
-                    "limit": limit
-                })
-
-                return [SearchLog(**item) for item in response.json()["response"]] if response.status_code == 200 else response.text
-
-            except Exception as err:
-                print(err)
-
     async def count_done_requests(self) -> int:
         async with httpx.AsyncClient(verify=False, timeout=None) as client:
             try:

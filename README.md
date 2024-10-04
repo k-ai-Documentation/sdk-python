@@ -48,15 +48,22 @@ print(await search.query("what is the history of France TV?", "userid"))
 ## Usage Guide
 ### Core
 [Core.py](modules/Core.py) provides methods for core functionalities.
-- count_documents
-- count_indexable_documents
-- count_indexed_documents
-- count_detected_documents
-- download_file
-- differential_indexation
-- get_scenarios
-- get_logs
-- reinit_all
+- count_documents : get number of documents analyzed
+- count_indexable_documents : get number of indexable document
+- count_indexed_documents : get number of indexed documents
+- count_detected_documents : get number of detected documents
+- download_file : download file
+    >id: document id
+- differential_indexation : index only new/updated/removed documents
+- get_scenarios : List all available scenarios with theirs API signatures
+- get_logs : Get KAI Semantic layer logs
+    log types: LLM error 500, LLM error 503, LLM Limitation rate, Application information, Excel parser error, Ppt Parser error, Word Parser error, Image Parser error, PDF Parser Error, Markdown Parser Error, Html Parser Error
+    >type: `type of log you want (like'Application information'), dont add if you want to get back all logs`
+    
+    >skip: 'pagination skip elements'
+
+    >take: 'pagination take elements'
+- reinit_all : Hard reset of KAI Semantic layer and reindex all datas, it can take a lot of time depending on the size of databases connected to KAI
 
 For example:
 ```py
@@ -67,13 +74,32 @@ print(await core.count_documents())
 
 ### Auditing
 [KMAudit.py](modules/KMAudit.py) provides methods for auditing.
-- get_all_tasks_linked_to_a_document
-- get_conflict_information
-- get_duplicated_information
-- set_conflict_managed
-- set_duplicated_information_managed
-- get_documents_to_manage
-- get_missing_subjects
+- get_all_tasks_linked_to_a_document : Get back all tasks linked to a document
+    >id: "Id of the document"
+
+- get_conflict_information : get back conflict information
+    >limit: 'number of content to return'
+
+    >offset: 'number of content to skip before starting to collect the result set'
+- get_duplicated_information : get back duplicated information
+    >limit: 'number of content to return',
+
+    >offset: 'number of content to skip before starting to collect the result set'
+
+- set_conflict_managed : set the state to managed for a conflict information
+    >id: 'id of the conflict information to set managed'
+
+- set_duplicated_information_managed : set the state to managed for a duplicated information
+    >id: 'id of the duplicated information to set managed'
+
+- get_documents_to_manage : list of all documents who contain conflict or duplicated information
+    >limit: "number of content to skip before starting to collect the result set (default 20)"
+
+    >offset: "number of content to return (default 0)"
+- get_missing_subjects : List all missing subjects following user queries
+    >limit: "number of content to skip before starting to collect the result set (default 20)"
+
+    >offset: "number of content to return (default 0)"
 
 For example:
 ```py
@@ -83,9 +109,9 @@ print(await km_audit.get_conflict_information(20, 0))
 
 ### ManageInstance
 [ManageInstance.py](modules/ManageInstance.py) provides methods for managing instance.
-- get_global_health
-- is_api_alive
-- version
+- get_global_health : get global health
+- is_api_alive : check if api is alive
+- version : get version
 
 For example:
 ```py
@@ -96,10 +122,16 @@ print(await manage_instance.get_global_health())
 
 ### SemanticGraph
 [SemanticGraph.py](modules/SemanticGraph.py) provides methods for managing semantic graph.
-- get_nodes
-- get_linked_nodes
-- get_node_by_label
-- detect_approximal_nodes
+- get_nodes : list all generated semantic nodes
+    >limit: 'limit of elements returned'
+    >offset: 'begin listing with this offset'
+- get_linked_nodes : get all linked nodes of one selected node
+    >id: 'Id of the reference node'
+- get_node_by_label : Get all nodes who is involved by the label tag
+    >label: 'Label tag'
+- detect_approximal_nodes : Identify nodes who can be used to defined the semaantic context of the query
+    >query: 'query searched'
+
 
 For example:
 ```py
@@ -109,14 +141,32 @@ print(semantic_graph.getNodes(10,0))
 
 ### Search
 [Search.py](modules/Search.py) provides methods for searching.
-- query
-- get_doc_signature
-- get_doc_ids
-- get_list_search
-- count_done_requests
-- count_answered_done_requests
-- get_requests_to_api
-- identify_specific_document
+- query : Make a search on the semantic index
+    >query: 'query to search on the semantic index'
+
+    >user: '(optional) user identifier to log for this query'
+
+    >impersonate: 'name a profile to imitate the style of answer. eg: Knowledge manager or Sales man'
+
+    >multiDocuments: 'true if you want to search across multiple documents, false if you want to retrieve an answer following only one document'
+    
+    >needFollowingQuestions: 'true if you want to the API purpose multiple next questions, else false'
+
+- get_doc_signature : get back a document signature
+    >id: 'id of the document to get signature'
+
+- get_doc_ids : get back identified documents signature
+    >docsIds: 'all docs ids'
+
+- count_done_requests : count number of call on search (/query) endpoint
+- count_answered_done_requests : count number of call on search (/query) endpoint where KAI find an answer
+- get_requests_to_api : get back requests made to the API
+    >limit: 'number of content to return'
+                    
+    >offset: 'number of content to skip before starting to collect the result set'
+- identify_specific_document : identify a concise question following the user needs and documents from knowledge base
+    >conversation:`an array on a conversation of the user and the assistant, each row of the array follow the structure { from: 'user' | 'assistant', message: string }`
+
 
 ```py
 search = KaiStudio(credentials).search()

@@ -1,9 +1,9 @@
-from modules.KMAduit import KMAudit
-from modules.KaiStudioCredentials import KaiStudioCredentials
-from modules.ManageInstance import ManageInstance
-from modules.Search import Search
-from modules.SemanticGraph import SemanticGraph
-from modules.Core import Core
+from .modules.KMAduit import KMAudit
+from .modules.KaiStudioCredentials import KaiStudioCredentials
+from .modules.ManageInstance import ManageInstance
+from .modules.Search import Search
+from .modules.SemanticGraph import SemanticGraph
+from .modules.Core import Core
 
 
 class KaiStudio:

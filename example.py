@@ -90,9 +90,6 @@ async def sync_mode():
     print("GET DOCS BY IDS:")
     print(await search.get_doc_ids(["document_id1","document_id2"]))
 
-    print("GET LIST SEARCH:")
-    print(await search.get_list_search(0, 10))
-
     print("COUNT DONE REQUESTS:")
     print(await search.count_done_requests())
 

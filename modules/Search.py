@@ -125,8 +125,7 @@ class Search:
                 response = await client.post(self.__baseurl + "api/search/identify-specific-document",
                                              headers=self.__headers,
                                              json={"conversation": conversation})
-
-                return response.json()['response'] if response.status_code == 200 else response.text
+                return response.json() if response.status_code == 200 else response.text
 
             except Exception as err:
                 print(err)

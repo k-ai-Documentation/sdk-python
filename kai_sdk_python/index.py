@@ -4,6 +4,7 @@ from .modules.ManageInstance import ManageInstance
 from .modules.Search import Search
 from .modules.SemanticGraph import SemanticGraph
 from .modules.Core import Core
+from .modules.FileInstance import FileInstance
 
 
 class KaiStudio:
@@ -19,10 +20,12 @@ class KaiStudio:
 
         if self.__credentials.organizationId and self.__credentials.instanceId and self.__credentials.apiKey:
             headers = {
-                'api-key': self.__credentials.apiKey
+                'api-key': self.__credentials.apiKey,
+                'organization-id': self.__credentials.organizationId,
+                'instance-id': self.__credentials.instanceId
             }
 
-            base_url = f"https://{self.__credentials.organizationId}.kai-studio.ai/{self.__credentials.instanceId}/"
+            base_url = "https://api.kai-studio.ai/"
 
             if self.__credentials.host:
                 base_url = self.__credentials.host
@@ -35,6 +38,7 @@ class KaiStudio:
             self.__manageInstance = ManageInstance(headers, base_url)
             self.__km_audit = KMAudit(headers, base_url)
             self.__semantic_graph = SemanticGraph(headers, base_url)
+            self.__file_instance = FileInstance(headers, base_url)
 
     def get_credentials(self) -> KaiStudioCredentials:
         return self.__credentials
@@ -53,3 +57,6 @@ class KaiStudio:
 
     def core(self) -> Core:
         return self.__core
+    
+    def file_instance(self) -> FileInstance:
+        return self.__file_instance

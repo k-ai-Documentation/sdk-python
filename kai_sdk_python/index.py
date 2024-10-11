@@ -38,7 +38,7 @@ class KaiStudio:
             self.__manageInstance = ManageInstance(headers, base_url)
             self.__km_audit = KMAudit(headers, base_url)
             self.__semantic_graph = SemanticGraph(headers, base_url)
-            self.__file_instance = FileInstance(headers, base_url)
+            self.__file_instance = FileInstance(headers)
 
     def get_credentials(self) -> KaiStudioCredentials:
         return self.__credentials
